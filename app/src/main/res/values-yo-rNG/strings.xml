@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Etieno\'s Android Labs</string>
-    <string name="hello_message">Hello World</string>
-    <string name="button_message">I am a button</string>
+    <string name="hello_message">ti o dara öjö aye!</string>
+    <string name="button_message">emi ni botini</string>
 </resources>
