@@ -3,5 +3,8 @@
     <string name="app_name">Etieno\'s Android Labs</string>
     <string name="hello_message">Hello World</string>
     <string name="button_message">I am a button</string>
-    <string name="switch_message">Spin flag</string>
+    <string name="spin_message">Spin flag</string>
+    <string name="button1">Button 1</string>
+    <string name="button2">Button 2</string>
+    <string name="button3">Button 3</string>
 </resources>
