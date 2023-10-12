@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Etieno\'s Android Labs</string>
+    <string name="email_label">" tẹ imeeli rẹ sii"</string>
+    <string name="password_label">" tẹ ọrọ igbaniwọle rẹ"</string>
+    <string name="login">wọle</string>
+    <string name="phone">nọmba ipe</string>
+    <string name="image">yi aworan pada</string>
+    <string name="welcome">ku aabọ pada</string>
+    <string name="hello_message">Bawo ni o se wa</string>
+    <string name="button_message">e mi ni botini</string>
+</resources>

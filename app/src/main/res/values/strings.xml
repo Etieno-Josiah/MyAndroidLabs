@@ -2,4 +2,10 @@
     <string name="app_name">Etieno\'s Android Labs</string>
     <string name="hello_message">Hello world!</string>
     <string name="button_message">I\'m a button</string>
+    <string name="email_label">Enter your email address:</string>
+    <string name="password_label">Type your password:</string>
+    <string name="login">LOGIN</string>
+    <string name="phone">CALL NUMBER</string>
+    <string name="image">CHANGE PICTURE</string>
+    <string name="welcome">Welcome back</string>
 </resources>
