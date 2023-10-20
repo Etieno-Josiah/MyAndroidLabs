@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Etieno\'s Android Labs</string>
-    <string name="hello_message">Hello world!</string>
-    <string name="button_message">I\'m a button</string>
+    <string name="hello_message">Type your password</string>
+    <string name="button_message">Login</string>
+    <string name="password_good">Your password is complex enough</string>
+    <string name="password_bad">You shall not pass!</string>
 </resources>
