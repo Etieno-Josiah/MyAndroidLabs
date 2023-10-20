@@ -3,6 +3,6 @@
     <string name="app_name">Etieno\'s Android Labs</string>
     <string name="hello_message">Hello World</string>
     <string name="button_message">I am a button</string>
-    <string name="password_good">Your password meets the requirements</string>
+    <string name="password_good">Your password is complex enough</string>
     <string name="password_bad">You shall not pass!</string>
 </resources>
