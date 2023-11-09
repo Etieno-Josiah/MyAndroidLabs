@@ -1,14 +1,27 @@
 package com.example.etienosandroidlabs;
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class ChatMessage {
-    private String message;
-    private String timeSent;
-    boolean isSentButton;
+    @ColumnInfo(name="message")
+    protected String message;
+    @ColumnInfo(name="TimeSent")
+    protected String timeSent;
+    @ColumnInfo(name="SendOrReceive")
+    protected boolean sendOrReceive;
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name="id")
+    public int id;
 
     public ChatMessage(String m, String t, boolean sent){
         message = m;
         timeSent = t;
-        isSentButton = sent;
+        sendOrReceive = sent;
     }
+    public ChatMessage(){}
 
     public String getMessage(){
         return message;
@@ -19,7 +32,7 @@ public class ChatMessage {
     }
 
     public boolean getIsSentButton(){
-        return isSentButton;
+        return sendOrReceive;
     }
 
 }
