@@ -5,4 +5,8 @@
     <string name="button_message">I am a button</string>
     <string name="password_good">Your password is complex enough</string>
     <string name="password_bad">You shall not pass!</string>
+    <string name="message">Message goes here</string>
+    <string name="time">Time goes here</string>
+    <string name="button_messageNew">SEND</string>
+    <string name="receive">RECEIVE</string>
 </resources>
