@@ -6,4 +6,5 @@
     <color name="my_secondary">#fCBA03</color>
     <color name="my_statusbar">#3D1431</color>
     <color name="my_text">#ED0A0A</color>
+    <color name="purple_200">#800080</color>
 </resources>

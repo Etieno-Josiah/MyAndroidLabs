@@ -3,12 +3,16 @@ package com.example.etienosandroidlabs;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -31,7 +35,7 @@ public class ChatRoom extends AppCompatActivity {
     ActivityChatRoomBinding binding;
     ChatRoomViewModel chatModel;
 
-    ArrayList<ChatMessage> messages = new ArrayList<>();
+    ArrayList<ChatMessage> messages;
     private RecyclerView.Adapter myAdapter;
     MessageDatabase db;
     ChatMessageDAO mDAO;
@@ -52,6 +56,7 @@ public class ChatRoom extends AppCompatActivity {
         mDAO = db.cmDAO();
 
         if(messages == null){
+            messages = new ArrayList<>();
             chatModel.messages.setValue(messages = new ArrayList<>());
 
 
@@ -132,6 +137,14 @@ public class ChatRoom extends AppCompatActivity {
                 return messages.get(position).sendOrReceive ? 0 : 1;
             }
         });
+
+        chatModel.selectedMessage.observe(this, (newMessageValue) -> {
+            MessageDetailsFragment chatFragment = new MessageDetailsFragment(newMessageValue);
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragmentLocation, chatFragment)
+                .addToBackStack("")
+                .commit();
+        });
     }
 
     class MyRowHolder extends RecyclerView.ViewHolder{
@@ -144,27 +157,9 @@ public class ChatRoom extends AppCompatActivity {
 
             itemView.setOnClickListener(clk ->{
                 int position = getAbsoluteAdapterPosition();
-                AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoom.this);
-                builder.setMessage("Do you want to delete this message: '" + messageText.getText() + "'")
-                    .setTitle("Question:")
-                    .setPositiveButton("Yes", (dialog, cl) -> {
-                        ChatMessage removedMessage = messages.get(position);
-                        thread.execute(() -> {
-                            mDAO.deleteMessage(removedMessage);
-                        });
-                        messages.remove(position);
-                        myAdapter.notifyItemRemoved(position);
+                ChatMessage selected = messages.get(position);
+                chatModel.selectedMessage.postValue(selected);
 
-                        Snackbar.make(messageText, "You deleted message #" + position, Snackbar.LENGTH_LONG )
-                            .setAction("UNDO", click -> {
-                                messages.add(position, removedMessage);
-                                myAdapter.notifyItemInserted(position);
-                            })
-                            .show();
-                    })
-                    .setNegativeButton("No", (dialog, cl) -> {})
-                    .create()
-                    .show();
             });
         }
     }
