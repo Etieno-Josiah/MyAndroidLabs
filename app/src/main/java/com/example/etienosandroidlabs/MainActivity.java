@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    /** This holds the text at the center of the screen*/
+    /** This holds the text shown at the center of the screen*/
     private TextView tv;
     /** This holds the password input from user*/
     private EditText et;
