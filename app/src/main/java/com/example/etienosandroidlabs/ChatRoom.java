@@ -3,19 +3,18 @@ package com.example.etienosandroidlabs;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.etienosandroidlabs.databinding.ActivityChatRoomBinding;
 import com.example.etienosandroidlabs.databinding.ReceiveMessageBinding;
@@ -40,6 +39,7 @@ public class ChatRoom extends AppCompatActivity {
     MessageDatabase db;
     ChatMessageDAO mDAO;
     Executor thread;
+    int position;
 
 
     @Override
@@ -50,6 +50,7 @@ public class ChatRoom extends AppCompatActivity {
 
         binding = ActivityChatRoomBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
 
         db = Room.databaseBuilder(getApplicationContext(), MessageDatabase.class,
                 "database-name").build();
@@ -147,6 +148,49 @@ public class ChatRoom extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.my_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        ChatMessage selected = messages.get(position);
+        chatModel.selectedMessage.postValue(selected);
+
+        switch(item.getItemId()){
+            case(R.id.delete):
+                AlertDialog.Builder builder = new AlertDialog.Builder(ChatRoom.this);
+                builder.setMessage("Do you want to delete this message: '" + selected.getMessage() + "'")
+                        .setTitle("Question:")
+                        .setPositiveButton("Yes", (dialog, cl) -> {
+                            ChatMessage removedMessage = messages.get(position);
+                            thread.execute(() -> {
+                                mDAO.deleteMessage(removedMessage);
+                            });
+                            messages.remove(position);
+                            myAdapter.notifyItemRemoved(position);
+
+                            View view = findViewById(android.R.id.content);
+                            Snackbar.make(view, "You deleted message #" + position, Snackbar.LENGTH_LONG )
+                                    .setAction("UNDO", click -> {
+                                        messages.add(position, removedMessage);
+                                        myAdapter.notifyItemInserted(position);
+                                    })
+                                    .show();
+                        })
+                        .setNegativeButton("No", (dialog, cl) -> {})
+                        .create()
+                        .show();
+                break;
+            case(R.id.about):
+                Toast.makeText(getApplicationContext(), "Version 1.0, created by Etieno Josiah",
+                        Toast.LENGTH_LONG).show();
+        }
+        return false;
+    }
+
     class MyRowHolder extends RecyclerView.ViewHolder{
         TextView messageText;
         TextView timeText;
@@ -156,9 +200,7 @@ public class ChatRoom extends AppCompatActivity {
             timeText = itemView.findViewById(R.id.time);
 
             itemView.setOnClickListener(clk ->{
-                int position = getAbsoluteAdapterPosition();
-                ChatMessage selected = messages.get(position);
-                chatModel.selectedMessage.postValue(selected);
+                position = getAbsoluteAdapterPosition();
 
             });
         }
