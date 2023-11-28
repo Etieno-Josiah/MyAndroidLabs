@@ -33,10 +33,10 @@ public class MainActivityTest {
      */
     @Test
     public void mainActivityTest() {
-        ViewInteraction appCompatEditText = onView(withId(R.id.editPassword));
+        ViewInteraction appCompatEditText = onView(withId(R.id.cityText));
         appCompatEditText.perform(replaceText("12345"), closeSoftKeyboard());
 
-        ViewInteraction materialButton = onView(withId(R.id.loginButton));
+        ViewInteraction materialButton = onView(withId(R.id.forecastButton));
         materialButton.perform(click());
 
         ViewInteraction textView = onView(withId(R.id.textView));
@@ -48,10 +48,10 @@ public class MainActivityTest {
      */
     @Test
     public void testFindMissingUpperCase() {
-        ViewInteraction appCompactEdit = onView(withId(R.id.editPassword));
+        ViewInteraction appCompactEdit = onView(withId(R.id.cityText));
         appCompactEdit.perform(replaceText("pasword123#$*"), closeSoftKeyboard());
 
-        ViewInteraction materialButton = onView(withId(R.id.loginButton));
+        ViewInteraction materialButton = onView(withId(R.id.forecastButton));
         materialButton.perform(click());
 
         ViewInteraction textView = onView(withId(R.id.textView));
@@ -63,10 +63,10 @@ public class MainActivityTest {
      */
     @Test
     public void testFindMissingLowerCase() {
-        ViewInteraction appCompactEdit = onView(withId(R.id.editPassword));
+        ViewInteraction appCompactEdit = onView(withId(R.id.cityText));
         appCompactEdit.perform(replaceText("PASSWORD123#$*"), closeSoftKeyboard());
 
-        ViewInteraction materialButton = onView(withId(R.id.loginButton));
+        ViewInteraction materialButton = onView(withId(R.id.forecastButton));
         materialButton.perform(click());
 
         ViewInteraction textView = onView(withId(R.id.textView));
@@ -78,10 +78,10 @@ public class MainActivityTest {
      */
     @Test
     public void testFindMissingDigit() {
-        ViewInteraction appCompactEdit = onView(withId(R.id.editPassword));
+        ViewInteraction appCompactEdit = onView(withId(R.id.cityText));
         appCompactEdit.perform(replaceText("PASSword#$*"), closeSoftKeyboard());
 
-        ViewInteraction materialButton = onView(withId(R.id.loginButton));
+        ViewInteraction materialButton = onView(withId(R.id.forecastButton));
         materialButton.perform(click());
 
         ViewInteraction textView = onView(withId(R.id.textView));
@@ -93,10 +93,10 @@ public class MainActivityTest {
      */
     @Test
     public void testFindMissingSpecialCharacter() {
-        ViewInteraction appCompactEdit = onView(withId(R.id.editPassword));
+        ViewInteraction appCompactEdit = onView(withId(R.id.cityText));
         appCompactEdit.perform(replaceText("PASSword123"), closeSoftKeyboard());
 
-        ViewInteraction materialButton = onView(withId(R.id.loginButton));
+        ViewInteraction materialButton = onView(withId(R.id.forecastButton));
         materialButton.perform(click());
 
         ViewInteraction textView = onView(withId(R.id.textView));
@@ -105,10 +105,10 @@ public class MainActivityTest {
 
     @Test
     public void testCorrectPassword() {
-        ViewInteraction appCompactEdit = onView(withId(R.id.editPassword));
+        ViewInteraction appCompactEdit = onView(withId(R.id.cityText));
         appCompactEdit.perform(replaceText("PASSword123@#$*"), closeSoftKeyboard());
 
-        ViewInteraction materialButton = onView(withId(R.id.loginButton));
+        ViewInteraction materialButton = onView(withId(R.id.forecastButton));
         materialButton.perform(click());
 
         ViewInteraction textView = onView(withId(R.id.textView));

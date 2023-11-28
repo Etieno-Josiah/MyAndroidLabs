@@ -7,33 +7,58 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.etienosandroidlabs.databinding.ActivityMainBinding;
+
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class MainActivity extends AppCompatActivity {
     /** This holds the text shown at the center of the screen*/
     private TextView tv;
     /** This holds the password input from user*/
     private EditText et;
     /** This holds the login button*/
-    private Button btn;
+    private Button forecastBtn;
+    ActivityMainBinding binding;
+    String cityName;
+    RequestQueue queue = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
 
-        tv = findViewById(R.id.textView);
-        et = findViewById(R.id.editPassword);
-        btn = findViewById(R.id.loginButton);
+        queue = Volley.newRequestQueue(this);
 
-        btn.setOnClickListener(clk -> {
-            String password = et.getText().toString();
-            checkPasswordComplexity(password);
-
-            if(checkPasswordComplexity(password)){
-                tv.setText(R.string.password_good);
-            }else{
-                tv.setText(R.string.password_bad);
+        binding.forecastButton.setOnClickListener(clk -> {
+            cityName = binding.cityText.getText().toString();
+            String api = "26b69dfadadc132c466d23b05ec8c42c";
+            String url = null;
+            try {
+                url = "https://api.openweathermap.org/data/2.5/weather?q=" +
+                        URLEncoder.encode(cityName, "UTF-8") +
+                        "}&appid=" + api;
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
             }
+
+            JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                    (response) -> {
+
+                    },
+                    (error) -> {
+
+                    });
+            queue.add(request);
         });
     }
 
