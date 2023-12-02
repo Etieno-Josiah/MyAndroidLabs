@@ -1,21 +1,36 @@
 package com.example.etienosandroidlabs;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.etienosandroidlabs.databinding.ActivityMainBinding;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -24,40 +39,103 @@ public class MainActivity extends AppCompatActivity {
     private TextView tv;
     /** This holds the password input from user*/
     private EditText et;
-    /** This holds the login button*/
-    private Button forecastBtn;
     ActivityMainBinding binding;
     String cityName;
     RequestQueue queue = null;
+    Bitmap image;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
 
         queue = Volley.newRequestQueue(this);
 
-        binding.forecastButton.setOnClickListener(clk -> {
-            cityName = binding.cityText.getText().toString();
+        binding.fBtn.setOnClickListener(clk -> {
+            Log.i("BUTTON", "Clicked");
+            cityName = binding.city.getText().toString();
+            Log.i("CITY", cityName);
             String api = "26b69dfadadc132c466d23b05ec8c42c";
-            String url = null;
+            String url = " ";
             try {
                 url = "https://api.openweathermap.org/data/2.5/weather?q=" +
                         URLEncoder.encode(cityName, "UTF-8") +
-                        "}&appid=" + api;
+                        "&appid=" + api;
+
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
 
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                     (response) -> {
+                        Log.i("REQUEST", cityName);
+                        try {
+                            JSONArray weatherArray = response.getJSONArray("weather");
+                            JSONObject position0 = weatherArray.getJSONObject(0);
+                            Log.i("WEATHER", weatherArray.toString());
 
+                            String description = position0.getString("description");
+                            String iconName = position0.getString("icon");
+
+                            JSONObject mainObject = response.getJSONObject("main");
+                            double current = mainObject.getDouble("temp");
+                            double min = mainObject.getDouble("temp_min");
+                            double max = mainObject.getDouble("temp_max");
+                            int humidity = mainObject.getInt("humidity");
+
+                            runOnUiThread(() -> {
+                                binding.tempText.setText("The current temperature is: " + current);
+                                binding.tempText.setVisibility(View.VISIBLE);
+                                binding.minText.setText("The min temperature is: " + min);
+                                binding.minText.setVisibility(View.VISIBLE);
+                                binding.maxText.setText("The max temperature is: " + max);
+                                binding.maxText.setVisibility(View.VISIBLE);
+                                binding.humidText.setText("The humidity is: " + humidity);
+                                binding.humidText.setVisibility(View.VISIBLE);
+
+                            });
+
+
+                            String imageUrl = "http://openweathermap.org/img/w/" + iconName + ".png";
+
+                            String pathName = getFilesDir() + "/" + iconName + ".png";
+                            File file = new File(pathName);
+                            if(file.exists()){
+                                image = BitmapFactory.decodeFile(pathName);
+                            }else{
+                                ImageRequest imageRequest = new ImageRequest(imageUrl, new Response.Listener<Bitmap>() {
+                                    @Override
+                                    public void onResponse(Bitmap bitmap) {
+                                        try{
+                                            image = bitmap;
+                                            image.compress(Bitmap.CompressFormat.PNG, 100,
+                                                    MainActivity.this.openFileOutput(iconName + ".png", Activity.MODE_PRIVATE));
+                                            runOnUiThread(() -> {
+                                                binding.icon.setImageBitmap(image);
+                                                binding.icon.setVisibility(View.VISIBLE);
+                                            });
+                                        }
+                                        catch (Exception e) {
+                                        }
+                                    }
+                                }, 1024, 10242, ImageView.ScaleType.CENTER, null,
+                                        (error -> {
+
+                                        }));
+                                queue.add(imageRequest);
+                            }
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
                     },
-                    (error) -> {
 
-                    });
+                    (error) -> {
+                        Log.e("IMAGE_REQUEST_ERROR", "Error loading image: " + error.toString());
+                    }   );
+
             queue.add(request);
         });
     }
